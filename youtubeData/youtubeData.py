@@ -35,7 +35,7 @@ def getData(url):
     '''
     Get metadata from youtube using the Youtube Data Api v3.
     Requires youtube link as a parameter and returns json data.
-    Returnes (title, channelName, publishDate, tags) as a tuple.
+    Returnes (title, channelName, publishDate, tags, description) as a tuple.
     '''
     id = url[32:]
 
@@ -45,6 +45,7 @@ def getData(url):
     title = response['items'][0]['snippet']['title']
     channelName = response['items'][0]['snippet']['channelTitle']
     tags = response['items'][0]['snippet']['tags']
+    description = response['items'][0]['snippet']['description']
 
     listTag = ''
     for tag in tags:
@@ -54,7 +55,7 @@ def getData(url):
     ordinalDay = makeOrdinal(date.strftime("%d"))
     publishDate = date.strftime(f"%b {ordinalDay}, %Y")
 
-    return title, channelName, publishDate, listTag
+    return title, channelName, publishDate, listTag, description
 
 
 metadata = getData(args.url)
@@ -73,6 +74,8 @@ published-on:: [[{metadata[2]}]]
 processed-on:: [[{ndate}]]
     - [[Youtube Embed]]
         - {{{{youtube {args.url}}}}}
+    - [[Description]]
+        - #+BEGIN_VERSE\n{metadata[4]}\n#+END_VERSE
     - [[Notes]]
         - <!--Write notes here-->
 ''')
